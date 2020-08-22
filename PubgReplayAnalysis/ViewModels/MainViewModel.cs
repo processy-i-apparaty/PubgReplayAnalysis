@@ -18,7 +18,11 @@ namespace PubgReplayAnalysis.ViewModels
 {
     internal class MainViewModel : Notifier
     {
-        private bool _isGridUpdating;
+        private readonly TimelineView _timelineView = new TimelineView();
+        private bool _checkedCheckedEventsMode;
+        private bool _checkedTimelineMode;
+        private Control _contentRightPanel;
+        private DisplayMode _displayMode;
         private List<PubgMatch> _pubgMatches;
         private int _replayFileSelectedIndex;
         private string _replayInfo;
@@ -31,87 +35,56 @@ namespace PubgReplayAnalysis.ViewModels
             var culture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
-            foreach (var dtc in Enum.GetNames(typeof(Enums.DamageTypeCategory)))
-                CheckDamageTypeCategory.Add(new CheckModel(dtc, true, ActionCheckModel));
+
+
+            CheckedTimelineMode = true;
         }
 
-        private void ActionCheckModel(string name, bool isChecked)
-        {
-            DisplayReplayInfo(ReplayFileSelectedIndex);
-        }
+
+        #region methods
 
         private void DisplayReplayInfo(int selectedIndex)
         {
-            if (_isGridUpdating || selectedIndex < 0 || selectedIndex >= ReplayFiles.Count) return;
+            if (selectedIndex < 0 || selectedIndex >= ReplayFiles.Count) return;
             var index = ReplayFiles[selectedIndex].Id;
+
             ReplayInfo = _replayInfos[index].ToString();
-            DataHelper.DisplayTimeLine(_pubgMatches[selectedIndex], ReplayEvents, CheckDamageTypeCategory);
+
+            switch (_displayMode)
+            {
+                case DisplayMode.Timeline:
+                    if (ContentRightPanel is TimelineView)
+                    {
+                        var timeLine = (TimelineViewModel) ContentRightPanel.DataContext;
+                        timeLine.Initialize(_pubgMatches[index]);
+                    }
+
+                    break;
+                case DisplayMode.Events:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
 
+        private void SetMode(DisplayMode mode)
+        {
+            _displayMode = mode;
 
-        // private void DisplayTimeLine(int index)
-        // {
-        //     ReplayEvents.Clear();
-        //     var match = _pubgMatches[index];
-        //     match.GameEvents.Sort((x, y) => x.Time1.CompareTo(y.Time1));
-        //     foreach (var matchGameEvent in match.GameEvents)
-        //     {
-        //         if (matchGameEvent.Group < Enums.EventGroup.Groggy) continue;
-        //         var id = matchGameEvent.Id;
-        //         var kill = match.Kills.FirstOrDefault(x => x.KillId == id);
-        //         if (kill == null) continue;
-        //
-        //         var check = false;
-        //         var kdtc = kill.DamageTypeCategory;
-        //         foreach (var checkModel in CheckDamageTypeCategory)
-        //             if (checkModel.CheckName == kdtc.ToString())
-        //                 if (!checkModel.IsChecked)
-        //                 {
-        //                     check = true;
-        //                     break;
-        //                 }
-        //
-        //         if (check) continue;
-        //
-        //
-        //         var killer = GetPlayer(kill.KillerNetId, kill.KillerPlayerId, match.PubgData.PlayerStateSummaries);
-        //         var victim = GetPlayer(kill.VictimNetId, kill.VictimPlayerId, match.PubgData.PlayerStateSummaries);
-        //
-        //         var state = kill.BGroggy ? "knocked" : "killed";
-        //         var re = new ReplayEvent
-        //         {
-        //             TimeString = $"{matchGameEvent.Time1:mm\\:ss}",
-        //             Killer = killer == null ? "" : killer.PlayerName,
-        //             Victim = victim == null ? "" : victim.PlayerName,
-        //             KillerTeam = killer?.TeamNumber.ToString() ?? "",
-        //             VictimTeam = victim?.TeamNumber.ToString() ?? "",
-        //             State = state,
-        //             DamageArea = kill.DamageReason,
-        //             DamageCategory = kill.DamageTypeCategory
-        //         };
-        //         ReplayEvents.Add(re);
-        //         //match.PubgData.PlayerStateSummaries[0].UniqueId
-        //     }
-        // }
+            switch (mode)
+            {
+                case DisplayMode.Timeline:
+                    ContentRightPanel = _timelineView;
+                    break;
+                case DisplayMode.Events:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+        }
 
-        // private static PlayerStateSummary GetPlayer(string id, string shortId, PlayerStateSummary[] playerStates)
-        // {
-        //     if (!string.IsNullOrWhiteSpace(id))
-        //     {
-        //         var playerState = playerStates.FirstOrDefault(x => x.UniqueId == id);
-        //         if (playerState != null) return playerState;
-        //     }
-        //
-        //     if (!string.IsNullOrWhiteSpace(shortId))
-        //     {
-        //         var playerState = playerStates.FirstOrDefault(x => x.ShortId == shortId);
-        //         if (playerState != null) return playerState;
-        //     }
-        //
-        //     return null;
-        // }
-
+        #endregion
 
         #region commands
 
@@ -130,7 +103,6 @@ namespace PubgReplayAnalysis.ViewModels
 
         private async void Update()
         {
-            _isGridUpdating = true;
             UpperContent = new Spinner();
             await Task.Run(() =>
             {
@@ -155,20 +127,50 @@ namespace PubgReplayAnalysis.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ReplayFiles.Clear();
-                    foreach (var fileModel in list) ReplayFiles.Add(fileModel);
-                    list.Clear();
-                    list = null;
+                    foreach (var replayFileModel in list) ReplayFiles.Add(replayFileModel);
                 });
             });
+
             UpperContent = null;
-            _isGridUpdating = false;
-            if (ReplayFiles.Count > 0) ReplayFileSelectedIndex = 0;
         }
 
         #endregion
 
         #region bindings
+
+        public Control UpperContent
+        {
+            get => _upperContent;
+            set
+            {
+                _upperContent = value;
+                Notify();
+            }
+        }
+
+        public bool CheckedTimelineMode
+        {
+            get => _checkedTimelineMode;
+            set
+            {
+                _checkedTimelineMode = value;
+                Notify();
+
+                if (value) SetMode(DisplayMode.Timeline);
+            }
+        }
+
+        public bool CheckedEventsMode
+        {
+            get => _checkedCheckedEventsMode;
+            set
+            {
+                _checkedCheckedEventsMode = value;
+                Notify();
+                if (value)
+                    SetMode(DisplayMode.Events);
+            }
+        }
 
         public int ReplayFileSelectedIndex
         {
@@ -181,9 +183,6 @@ namespace PubgReplayAnalysis.ViewModels
             }
         }
 
-        public ObservableCollection<ReplayFileModel> ReplayFiles { get; set; } =
-            new ObservableCollection<ReplayFileModel>();
-
         public string ReplayInfo
         {
             get => _replayInfo;
@@ -194,18 +193,16 @@ namespace PubgReplayAnalysis.ViewModels
             }
         }
 
-        public ObservableCollection<ReplayEvent> ReplayEvents { get; set; }
-            = new ObservableCollection<ReplayEvent>();
+        public ObservableCollection<ReplayFileModel> ReplayFiles { get; set; } =
+            new ObservableCollection<ReplayFileModel>();
 
-        public ObservableCollection<CheckModel> CheckDamageTypeCategory { get; set; } =
-            new ObservableCollection<CheckModel>();
 
-        public Control UpperContent
+        public Control ContentRightPanel
         {
-            get => _upperContent;
+            get => _contentRightPanel;
             set
             {
-                _upperContent = value;
+                _contentRightPanel = value;
                 Notify();
             }
         }

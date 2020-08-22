@@ -69,17 +69,22 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataHelper.cs" />
+    <Compile Include="DisplayMode.cs" />
     <Compile Include="Infrastructure\Notifier.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />
     <Compile Include="Models\CheckModel.cs" />
     <Compile Include="Models\ReplayEvent.cs" />
     <Compile Include="Models\ReplayFileModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\TimelineViewModel.cs" />
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Spinner.xaml.cs">
       <DependentUpon>Spinner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TimelineView.xaml.cs">
+      <DependentUpon>TimelineView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +126,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Spinner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TimelineView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
