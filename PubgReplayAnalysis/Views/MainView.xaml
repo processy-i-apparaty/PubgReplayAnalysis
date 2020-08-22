@@ -1,0 +1,84 @@
+﻿<Window x:Class="PubgReplayAnalysis.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:PubgReplayAnalysis.ViewModels"
+        mc:Ignorable="d"
+        Title="PUBG Replay Analyzer (demo version)" Height="450" Width="1000" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <viewModels:MainViewModel />
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.ColumnSpan="3"
+                    Orientation="Horizontal">
+            <Button Margin="3"
+                    Content="Update"
+                    Command="{Binding Command}"
+                    CommandParameter="update" />
+        </StackPanel>
+        <GridSplitter Grid.Row="1" Grid.Column="1" ShowsPreview="False" Width="3"
+                      HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="180" />
+            </Grid.RowDefinitions>
+            <DataGrid ItemsSource="{Binding ReplayFiles}" SelectedIndex="{Binding ReplayFileSelectedIndex}"
+                      AutoGenerateColumns="False" MaxWidth="500" VerticalScrollBarVisibility="Auto"
+                      CanUserSortColumns="False" SelectionMode="Single" IsReadOnly="True"
+                      AlternatingRowBackground="#FFEDEDED">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                    <DataGridTextColumn Header="TimeStamp" Binding="{Binding TimeStampString}" />
+                    <DataGridTextColumn Header="Duration" Binding="{Binding DurationString}" />
+                    <DataGridTextColumn Header="MapName" Binding="{Binding MapName}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBox
+                IsReadOnly="True"
+                Background="Transparent"
+                BorderThickness="0"
+                Text="{Binding ReplayInfo}" Grid.Row="1" />
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <DataGrid Grid.Row="1" CanUserSortColumns="False"
+                      ItemsSource="{Binding ReplayEvents}"
+                      SelectionMode="Single" IsReadOnly="True"
+                      AlternatingRowBackground="#FFEDEDED"
+                      HorizontalScrollBarVisibility="Disabled" MaxWidth="800" />
+            <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
+                <ItemsControl ItemsSource="{Binding CheckDamageTypeCategory}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding CheckName}" IsChecked="{Binding IsChecked}" Margin="5"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Grid>
+
+        <ContentControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="2" Content="{Binding UpperContent}"></ContentControl>
+    </Grid>
+</Window>
