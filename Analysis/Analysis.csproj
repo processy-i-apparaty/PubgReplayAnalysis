@@ -53,6 +53,7 @@
     <Compile Include="JsonModels\ReplayInfo.cs" />
     <Compile Include="JsonModels\Weather.cs" />
     <Compile Include="JsonConverters\MillisecondsTimeSpanConverter.cs" />
+    <Compile Include="ObjectCopier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PubgMatch.cs" />
     <Compile Include="Reader.cs" />

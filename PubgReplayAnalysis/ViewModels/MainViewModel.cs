@@ -18,6 +18,7 @@ namespace PubgReplayAnalysis.ViewModels
 {
     internal class MainViewModel : Notifier
     {
+        private readonly EventsView _eventsView = new EventsView();
         private readonly TimelineView _timelineView = new TimelineView();
         private bool _checkedCheckedEventsMode;
         private bool _checkedTimelineMode;
@@ -46,7 +47,9 @@ namespace PubgReplayAnalysis.ViewModels
         private void DisplayReplayInfo(int selectedIndex)
         {
             if (selectedIndex < 0 || selectedIndex >= ReplayFiles.Count) return;
+            if (_pubgMatches.Count == 0) return;
             var index = ReplayFiles[selectedIndex].Id;
+            var pubgMatch = _pubgMatches[index];
 
             ReplayInfo = _replayInfos[index].ToString();
 
@@ -56,11 +59,17 @@ namespace PubgReplayAnalysis.ViewModels
                     if (ContentRightPanel is TimelineView)
                     {
                         var timeLine = (TimelineViewModel) ContentRightPanel.DataContext;
-                        timeLine.Initialize(_pubgMatches[index]);
+                        timeLine.Initialize(pubgMatch);
                     }
 
                     break;
                 case DisplayMode.Events:
+                    if (ContentRightPanel is EventsView)
+                    {
+                        var eventsViewModel = (EventsViewModel) ContentRightPanel.DataContext;
+                        eventsViewModel.Initialize(pubgMatch);
+                    }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -78,10 +87,13 @@ namespace PubgReplayAnalysis.ViewModels
                     ContentRightPanel = _timelineView;
                     break;
                 case DisplayMode.Events:
+                    ContentRightPanel = _eventsView;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
+
+            if (ReplayFiles.Count > 0) DisplayReplayInfo(ReplayFileSelectedIndex);
         }
 
         #endregion
@@ -128,6 +140,7 @@ namespace PubgReplayAnalysis.ViewModels
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     foreach (var replayFileModel in list) ReplayFiles.Add(replayFileModel);
+                    if (list.Count > 0) ReplayFileSelectedIndex = 0;
                 });
             });
 

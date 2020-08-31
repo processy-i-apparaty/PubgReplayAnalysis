@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Analysis.JsonModels
 {
+    [Serializable]
     public class PubgData
     {
         [JsonProperty("matchId")]
@@ -29,12 +31,34 @@ namespace Analysis.JsonModels
         public string RegionName { get; set; }
 
         [JsonProperty("numPlayers")]
-        public long NumPlayers { get; set; }
+        public int NumPlayers { get; set; }
 
         [JsonProperty("numTeams")]
-        public long NumTeams { get; set; }
+        public int NumTeams { get; set; }
 
         [JsonProperty("playerStateSummaries")]
         public PlayerStateSummary[] PlayerStateSummaries { get; set; }
+
+        // public PubgData Copy()
+        // {
+        //     var data = new PubgData
+        //     {
+        //         MatchId = $"{MatchId}",
+        //         BIsServerRecording = BIsServerRecording,
+        //         RecordUserId = $"{RecordUserId}",
+        //         RecordAccountId = $"{RecordAccountId}",
+        //         RecordUserNickName = $"{RecordUserNickName}",
+        //         MapName = $"{MapName}",
+        //         NumPlayers = NumPlayers,
+        //         NumTeams = NumTeams,
+        //         RegionName = $"{RegionName}",
+        //         PlayerStateSummaries = new PlayerStateSummary[PlayerStateSummaries.Length],
+        //
+        //     };
+        //     for (int i = 0; i < PlayerStateSummaries.Length; i++)
+        //     {
+        //         data.PlayerStateSummaries[i] = PlayerStateSummaries[i].Copy();
+        //     }
+        // }
     }
 }

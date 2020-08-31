@@ -9,13 +9,13 @@
     <UserControl.DataContext>
         <viewModels:TimelineViewModel/>
     </UserControl.DataContext>
-    <Grid>
+    <Grid Background="Cornsilk">
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <DataGrid Grid.Row="1" CanUserSortColumns="False"
-                  ItemsSource="{Binding ReplayEvents}"
+                  ItemsSource="{Binding TimelineEvents}"
                   SelectionMode="Single" IsReadOnly="True"
                   AlternatingRowBackground="#FFEDEDED"
                   HorizontalScrollBarVisibility="Disabled" MaxWidth="800" />

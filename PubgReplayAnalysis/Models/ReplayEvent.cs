@@ -1,17 +1,18 @@
-﻿using Analysis;
+﻿using System;
 
 namespace PubgReplayAnalysis.Models
 {
     public class ReplayEvent
     {
-        public string TimeString { get; set; }
-        public string Killer { get; set; }
-        public string KillerTeam { get; set; }
+        public string TimeString
+        {
+            get => $"{Time.Minutes:00}:{Time.Seconds:00}";
+            set => Time = TimeSpan.ParseExact(value, "mm':'ss", null);
+        }
 
-        public string Victim { get; set; }
-        public string VictimTeam { get; set; }
-        public string State { get; set; }
-        public Enums.DamageReason DamageArea { get; set; }
-        public Enums.DamageTypeCategory DamageCategory { get; set; }
+        public string Player { get; set; }
+        public string Team { get; set; }
+        public string EventType { get; set; }
+        public TimeSpan Time;
     }
 }

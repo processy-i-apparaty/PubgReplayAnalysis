@@ -17,7 +17,6 @@ namespace Analysis
 
             try
             {
-
                 if (!Directory.Exists(Values.ReplaysDirectory)) return "DEMOS DIRECTORY NOT EXIST!";
 
                 foreach (var directory in Directory.GetDirectories(Values.ReplaysDirectory))
@@ -54,23 +53,25 @@ namespace Analysis
                 if (info.Length >= 100000) continue;
                 var json = Ue4StringSerializer(fileName, 1);
                 // Console.WriteLine($"{info.Name} : {info.Length} bytes\n{json}\n");
-                var kill = JsonConvert.DeserializeObject<Kill>(json);
-                if (kill.DamageCauseClassName != null)
-                {
-                    kill.KillId = fileName.Substring(fileName.LastIndexOf('\\')).Replace("\\", "");
-                    pubgMatch.Kills.Add(kill);
-                    continue;
-                }
 
-                var pubgData = JsonConvert.DeserializeObject<PubgData>(json);
-                if (pubgData.MatchId != null)
-                {
-                    pubgMatch.PubgData = pubgData;
-                    continue;
-                }
+                    var kill = JsonConvert.DeserializeObject<Kill>(json);
+                    if (kill?.DamageCauseClassName != null)
+                    {
+                        kill.KillId = fileName.Substring(fileName.LastIndexOf('\\')).Replace("\\", "");
+                        pubgMatch.Kills.Add(kill);
+                        continue;
+                    }
 
-                var weather = JsonConvert.DeserializeObject<Weather>(json);
-                if (weather.WeatherId != null) pubgMatch.Weather = weather;
+                    var pubgData = JsonConvert.DeserializeObject<PubgData>(json);
+                    if (pubgData?.MatchId != null)
+                    {
+                        pubgMatch.PubgData = pubgData;
+                        continue;
+                    }
+
+                    var weather = JsonConvert.DeserializeObject<Weather>(json);
+                    if (weather?.WeatherId != null) pubgMatch.Weather = weather;
+
             }
         }
 

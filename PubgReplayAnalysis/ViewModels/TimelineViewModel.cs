@@ -20,19 +20,19 @@ namespace PubgReplayAnalysis.ViewModels
         public void Initialize(PubgMatch pubgMatch)
         {
             _pubgMatch = pubgMatch;
-            DataHelper.DisplayTimeLine(pubgMatch, ReplayEvents, CheckDamageTypeCategory);
+            DataHelper.DisplayTimeLine(pubgMatch, TimelineEvents, CheckDamageTypeCategory);
         }
 
         private void ActionCheckModel(string name, bool isChecked)
         {
             if (_pubgMatch != null)
-                DataHelper.DisplayTimeLine(_pubgMatch, ReplayEvents, CheckDamageTypeCategory);
+                DataHelper.DisplayTimeLine(_pubgMatch, TimelineEvents, CheckDamageTypeCategory);
         }
 
         #region bindings
 
-        public ObservableCollection<ReplayEvent> ReplayEvents { get; set; }
-            = new ObservableCollection<ReplayEvent>();
+        public ObservableCollection<TimelineEvent> TimelineEvents { get; set; }
+            = new ObservableCollection<TimelineEvent>();
 
 
         public ObservableCollection<CheckModel> CheckDamageTypeCategory { get; set; } =

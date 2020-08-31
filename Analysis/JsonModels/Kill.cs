@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace Analysis.JsonModels
 {
+    [Serializable]
     public class Kill
     {
         [JsonProperty("killerNetId")] public string KillerNetId { get; set; }

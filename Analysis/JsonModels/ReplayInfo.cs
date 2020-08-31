@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace Analysis.JsonModels
 {
+    [Serializable]
     public class ReplayInfo
     {
         [JsonProperty("LengthInMS")] [JsonConverter(typeof(MillisecondsTimeSpanConverter))] public TimeSpan LengthInMs { get; set; }

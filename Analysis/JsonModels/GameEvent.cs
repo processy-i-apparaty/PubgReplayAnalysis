@@ -5,6 +5,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Analysis.JsonModels
 {
+    [Serializable]
     public class GameEvent
     {
         [JsonProperty("id")]

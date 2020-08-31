@@ -4,6 +4,12 @@ namespace Analysis
 {
     public class Enums
     {
+        public enum LifeState
+        {
+            Killed,
+            Knocked
+        }
+
         public enum DamageReason
         {
             HeadShot,

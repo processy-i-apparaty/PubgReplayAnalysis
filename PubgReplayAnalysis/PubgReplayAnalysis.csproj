@@ -70,13 +70,21 @@
     </Compile>
     <Compile Include="DataHelper.cs" />
     <Compile Include="DisplayMode.cs" />
+    <Compile Include="EventHelper.cs" />
     <Compile Include="Infrastructure\Notifier.cs" />
+    <Compile Include="Infrastructure\ObjectCopier.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />
     <Compile Include="Models\CheckModel.cs" />
+    <Compile Include="Models\CheckReplayEventsModel.cs" />
     <Compile Include="Models\ReplayEvent.cs" />
+    <Compile Include="Models\TimelineEvent.cs" />
     <Compile Include="Models\ReplayFileModel.cs" />
+    <Compile Include="ViewModels\EventsViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\TimelineViewModel.cs" />
+    <Compile Include="Views\EventsView.xaml.cs">
+      <DependentUpon>EventsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -121,6 +129,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\EventsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
