@@ -52,6 +52,7 @@ namespace Analysis
             [EnumMember(Value = "ReplaySummary")] ReplaySummary,
             [EnumMember(Value = "level")] Level,
             [EnumMember(Value = "checkpoint")] Checkpoint,
+            [EnumMember(Value = "camera")] Camera,
             [EnumMember(Value = "groggy")] Groggy,
             [EnumMember(Value = "kill")] Kill
         }

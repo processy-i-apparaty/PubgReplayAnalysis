@@ -131,7 +131,8 @@ namespace PubgReplayAnalysis
                 {
                     var lifeState = timelineEvent.State;
                     if (lifeState != Enums.LifeState.Killed) continue;
-                    var victimTeam = int.Parse(timelineEvent.VictimTeam);
+
+                    if (!int.TryParse(timelineEvent.VictimTeam, out var victimTeam)) continue;
                     if (victimTeam != teamNumber) continue;
 
                     if (teamDeaths.ContainsKey(teamNumber)) teamDeaths[teamNumber]++;

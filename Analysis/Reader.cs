@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace Analysis
             replayInfos = new List<ReplayInfo>();
             pubgMatches = new List<PubgMatch>();
 
+            var currentDir = string.Empty;
             try
             {
                 if (!Directory.Exists(Values.ReplaysDirectory)) return "DEMOS DIRECTORY NOT EXIST!";
@@ -22,6 +24,7 @@ namespace Analysis
                 foreach (var directory in Directory.GetDirectories(Values.ReplaysDirectory))
                     if (directory.Contains("match."))
                     {
+                        currentDir = directory;
                         GetReplay(directory, out var pubgMatch, out var replayInfo);
                         replayInfos.Add(replayInfo);
                         pubgMatches.Add(pubgMatch);
@@ -32,7 +35,7 @@ namespace Analysis
             }
             catch (Exception e)
             {
-                return e.Message;
+                return $"{currentDir}\n{e.Message}";
             }
         }
 
@@ -54,24 +57,23 @@ namespace Analysis
                 var json = Ue4StringSerializer(fileName, 1);
                 // Console.WriteLine($"{info.Name} : {info.Length} bytes\n{json}\n");
 
-                    var kill = JsonConvert.DeserializeObject<Kill>(json);
-                    if (kill?.DamageCauseClassName != null)
-                    {
-                        kill.KillId = fileName.Substring(fileName.LastIndexOf('\\')).Replace("\\", "");
-                        pubgMatch.Kills.Add(kill);
-                        continue;
-                    }
+                var kill = JsonConvert.DeserializeObject<Kill>(json);
+                if (kill?.DamageCauseClassName != null)
+                {
+                    kill.KillId = fileName.Substring(fileName.LastIndexOf('\\')).Replace("\\", "");
+                    pubgMatch.Kills.Add(kill);
+                    continue;
+                }
 
-                    var pubgData = JsonConvert.DeserializeObject<PubgData>(json);
-                    if (pubgData?.MatchId != null)
-                    {
-                        pubgMatch.PubgData = pubgData;
-                        continue;
-                    }
+                var pubgData = JsonConvert.DeserializeObject<PubgData>(json);
+                if (pubgData?.MatchId != null)
+                {
+                    pubgMatch.PubgData = pubgData;
+                    continue;
+                }
 
-                    var weather = JsonConvert.DeserializeObject<Weather>(json);
-                    if (weather?.WeatherId != null) pubgMatch.Weather = weather;
-
+                var weather = JsonConvert.DeserializeObject<Weather>(json);
+                if (weather?.WeatherId != null) pubgMatch.Weather = weather;
             }
         }
 
@@ -81,9 +83,23 @@ namespace Analysis
             var files = Directory.GetFiles(events);
             foreach (var file in files)
             {
+                if (Path.GetExtension(file) == ".png") continue;
                 var json = Ue4StringSerializer(file);
                 var gameEvent = JsonConvert.DeserializeObject<GameEvent>(json);
-                pubgMatch.GameEvents.Add(gameEvent);
+                Debug.WriteLine($"{json}\n");
+                if (json.Contains("ReplaySummary"))
+                {
+                }
+
+                switch (gameEvent.Group)
+                {
+                    case Enums.EventGroup.Camera:
+                    case Enums.EventGroup.Checkpoint:
+                        continue;
+                    default:
+                        pubgMatch.GameEvents.Add(gameEvent);
+                        break;
+                }
             }
         }
 

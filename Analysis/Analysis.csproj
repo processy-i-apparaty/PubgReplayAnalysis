@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums.cs" />
+    <Compile Include="JsonModels\Camera.cs" />
     <Compile Include="JsonModels\GameEvent.cs" />
     <Compile Include="JsonModels\Kill.cs" />
     <Compile Include="JsonModels\PubgData.cs" />
