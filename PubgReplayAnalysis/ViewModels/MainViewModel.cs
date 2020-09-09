@@ -139,6 +139,7 @@ namespace PubgReplayAnalysis.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
+                    ReplayFiles.Clear();
                     foreach (var replayFileModel in list) ReplayFiles.Add(replayFileModel);
                     if (list.Count > 0) ReplayFileSelectedIndex = 0;
                 });

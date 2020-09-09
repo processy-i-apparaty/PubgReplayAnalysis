@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:PubgReplayAnalysis.ViewModels"
         mc:Ignorable="d"
-        Title="PUBG Replay Analyzer v1.0.1b" Height="450" Width="1000" WindowStartupLocation="CenterScreen">
+        Title="PUBG Replay Analyzer v1.0.2b" Height="450" Width="1000" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <viewModels:MainViewModel />
     </Window.DataContext>
