@@ -30,11 +30,21 @@ namespace Analysis
             ExplosionGrenade,
             [EnumMember(Value = "Damage_Molotov")] Molotov,
 
+            [EnumMember(Value = "Damage_Explosion_JerryCan")]
+            ExplosionJerryCan,
+
+            
             [EnumMember(Value = "Damage_VehicleHit")]
             VehicleHit,
 
+            [EnumMember(Value = "Damage_VehicleCrashHit")]
+            VehicleCrashHit,
+
             [EnumMember(Value = "Damage_BlueZone")]
             BlueZone,
+
+            [EnumMember(Value = "Damage_Drown")]
+            Drown,
 
             [EnumMember(Value = "Damage_Instant_Fall")]
             InstantFall,
